@@ -26,6 +26,7 @@ with open(f'{dataset}/{dataset}_label.json') as fin:
 		label = data['label']
 		text = data['combined_text']
 		label2text[label] = text
+layer = 0 # set layer
 
 with open(f'{dataset}/{dataset}_candidates.json') as fin, open(f'{dataset}_input/test.txt', 'w') as fout:
 	for line in tqdm(fin):

@@ -140,6 +140,66 @@ def two_intermediate_node(dataset, doc2text, docs, metadata1, metadata2):
 			fout.write(f'1\t{doc2text[doc]}\t{doc2text[dp]}\n')
 			fout.write(f'0\t{doc2text[doc]}\t{doc2text[dn]}\n')
 
+# P(AA)P, P(AV)P, P->(PP)<-P, and P<-(PP)->P
+def one_intermediate_node_one_neg(dataset, doc2text, docs, metadata1, metadata2):
+	meta12doc = defaultdict(set)
+	meta22doc = defaultdict(set)
+	doc2meta1 = {}
+	doc2meta2 = {}
+	with open(f'{dataset}/{dataset}_train.json') as fin:
+		for idx, line in enumerate(tqdm(fin)):
+			data = json.loads(line)
+			doc = data['paper']
+
+			meta1s = data[metadata1]
+			if not isinstance(meta1s, list):
+				meta1s = [meta1s]
+			for meta1 in meta1s:
+				meta12doc[meta1].add(doc)
+			doc2meta1[doc] = set(meta1s)
+
+			meta2s = data[metadata2]
+			if not isinstance(meta2s, list):
+				meta2s = [meta2s]
+			for meta2 in meta2s:
+				meta22doc[meta2].add(doc)
+			doc2meta2[doc] = set(meta2s)
+	with open(f'{dataset}_input/dataset.txt', 'w') as fout:
+		for idx, doc in enumerate(tqdm(doc2meta1)):
+			metas = doc2meta1[doc]
+			dps = []
+			for meta in metas:
+				candidates = list(meta12doc[meta])
+				if len(candidates) > 1:
+					while True:
+						dp = random.choice(candidates)
+						if dp != doc:
+							dps.append(dp)
+							break
+				if len(dps) == 0:
+					continue
+			dp = random.choice(dps)
+			metas = doc2meta2[doc]
+			dns = []
+			for meta in metas:
+				candidates = list(meta22doc[meta])
+				if len(candidates) > 1:
+					while True:
+						dn = random.choice(candidates)
+						if dn != doc:
+							dns.append(dn)
+							break
+				if len(dns) == 0:
+					continue
+			dn = random.choice(dns)
+			while True:
+				dn = random.choice(dns)
+				if dn != doc and dn != dp:
+					break
+			fout.write(f'1\t{doc2text[doc]}\t{doc2text[dp]}\n')
+			fout.write(f'0\t{doc2text[doc]}\t{doc2text[dn]}\n')
+
+
 
 parser = argparse.ArgumentParser(description='main', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('--dataset', default='MAG', type=str)
@@ -173,7 +233,7 @@ elif metagraph == 'PVP':
 	one_intermediate_node(dataset, doc2text, docs, 'venue')
 # P->P<-P
 elif metagraph == 'PRP':
-	one_intermediate_node(dataset, doc2text, docs, 'reference')
+	one_intermediate_node_one_neg(dataset, doc2text, docs, 'reference', 'venue')
 # P<-P->P
 elif metagraph == 'PCP':
 	one_intermediate_node(dataset, doc2text, docs, 'citation')

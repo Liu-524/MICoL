@@ -79,8 +79,10 @@ def eval_running_model(dataloader, test=False):
 
 def pred_running_model(dataloader, out_file):
 	model.eval()
+	for k, v in model.named_paramters():
+		
 	with open(out_file, 'w') as fout:
-		for step, batch in enumerate(dataloader):
+		for step, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
 			batch = tuple(t.to(device) for t in batch)
 			if args.architecture == 'cross':
 				text_token_ids_list_batch, text_input_masks_list_batch, text_segment_ids_list_batch, labels_batch = batch
@@ -160,7 +162,7 @@ if __name__ == '__main__':
 	ConfigClass, TokenizerClass, BertModelClass = MODEL_CLASSES[args.model_type]
 
 	## init dataset and bert model
-	tokenizer = TokenizerClass.from_pretrained(os.path.join(args.bert_model, "vocab.txt"), do_lower_case=True, clean_text=False)
+	tokenizer = TokenizerClass.from_pretrained(args.bert_model, do_lower_case=True, clean_text=False)
 	context_transform = SelectionJoinTransform(tokenizer=tokenizer, max_len=args.max_contexts_length)
 	response_transform = SelectionSequentialTransform(tokenizer=tokenizer, max_len=args.max_response_length)
 	concat_transform = SelectionConcatTransform(tokenizer=tokenizer, max_response_len=args.max_response_length, max_contexts_len=args.max_contexts_length)

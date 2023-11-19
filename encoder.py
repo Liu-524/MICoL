@@ -58,7 +58,7 @@ class CrossEncoder(BertPreTrainedModel):
 		score = self.linear(text_vec)
 		score = score.view(-1, neg)
 		if labels is not None:
-			loss = -F.log_softmax(score, -1)[:,0].mean()
+			loss = -F.log_softmax(score, -1)[:,0].mean() + torch.abs(score[:,0] - score[:,1]).norm(2)
 			return loss
 		else:
 			return score

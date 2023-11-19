@@ -107,11 +107,26 @@ args = parser.parse_args()
 
 preds = []
 targets = []
+k = 0
+d = 0
+adj_dict = {}
+rev_dict = {}
+children = set()
+with open(f'data/{args.dataset}/taxonomy.txt', 'r') as fin:
+    for line in fin:
+        split = line.strip().split()
+        p = int(split[0])
+        c = set([int(x) for x in split[1:]])
+        adj_dict[p] = c
+        for cc in c:
+            rev_dict[cc] = rev_dict.get(cc, set()).union({p})
+        children = children.union(c)
+
 with open(os.path.join(args.output_dir, f'prediction_{args.architecture}.json')) as fin:
-	for line in fin:
+	for i, line in enumerate(fin):
 		data = json.loads(line)
-		targets.append(data['label'])
 		pred = [x[0] for x in data['predicted_label']]
+		targets.append(data['label'])
 		pred = pred[:5] + ['PAD']*(5-len(pred))
 		preds.append(pred)
 preds = np.array(preds)
