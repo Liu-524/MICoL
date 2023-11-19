@@ -150,14 +150,12 @@ def one_intermediate_node_one_neg(dataset, doc2text, docs, metadata1, metadata2)
 		for idx, line in enumerate(tqdm(fin)):
 			data = json.loads(line)
 			doc = data['paper']
-
 			meta1s = data[metadata1]
 			if not isinstance(meta1s, list):
 				meta1s = [meta1s]
 			for meta1 in meta1s:
 				meta12doc[meta1].add(doc)
 			doc2meta1[doc] = set(meta1s)
-
 			meta2s = data[metadata2]
 			if not isinstance(meta2s, list):
 				meta2s = [meta2s]

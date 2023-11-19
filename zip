@@ -1,0 +1,19 @@
+Archive:  MICoL.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  2022-04-21 03:00   scibert_scivocab_uncased/
+      313  2019-02-07 19:48   scibert_scivocab_uncased/config.json
+442219092  2019-02-07 19:48   scibert_scivocab_uncased/pytorch_model.bin
+   227845  2019-03-25 18:52   scibert_scivocab_uncased/vocab.txt
+        0  2022-04-21 03:01   MAG/
+ 14086683  2021-09-27 14:38   MAG/MAG_candidates.json
+ 16346064  2022-04-10 23:04   MAG/MAG_label.json
+ 79494503  2022-04-19 03:01   MAG/MAG_test.json
+744252192  2022-04-19 03:01   MAG/MAG_train.json
+        0  2022-04-21 03:01   PubMed/
+ 21407419  2021-09-27 14:38   PubMed/PubMed_candidates.json
+ 12419690  2022-04-21 02:30   PubMed/PubMed_label.json
+149082251  2022-04-21 02:34   PubMed/PubMed_test.json
+1429813292  2022-04-21 02:34   PubMed/PubMed_train.json
+---------                     -------
+2909349344                     14 files

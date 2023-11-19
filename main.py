@@ -79,8 +79,6 @@ def eval_running_model(dataloader, test=False):
 
 def pred_running_model(dataloader, out_file):
 	model.eval()
-	for k, v in model.named_paramters():
-		
 	with open(out_file, 'w') as fout:
 		for step, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
 			batch = tuple(t.to(device) for t in batch)
